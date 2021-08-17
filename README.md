@@ -1,1 +1,1 @@
-# cloudformation-aws-lambda
+# cloudformation-templates
