@@ -35,7 +35,7 @@ Parameters:
   ReservedConcurrentExecutions:
     Type: Number
     Default: 100
-    Description: The number of simultaneous executions to reserve for the function.
+    Description: The number of simultaneous executions to reserve for the function. Set to -1 to not reserve concurrent executions.
   Timeout:
     Type: Number
     Default: 60
@@ -70,6 +70,7 @@ Mappings:
     ca-central-1: { BucketName: 'observeinc-ca-central-1' }
     ap-northeast-1: { BucketName: 'observeinc-ap-northeast-1' }
     ap-northeast-2: { BucketName: 'observeinc-ap-northeast-2' }
+    ap-northeast-3: { BucketName: 'observeinc-ap-northeast-3' }
     ap-south-1: { BucketName: 'observeinc-ap-south-1' }
     ap-southeast-1: { BucketName: 'observeinc-ap-southeast-1' }
     ap-southeast-2: { BucketName: 'observeinc-ap-southeast-2' }
@@ -85,6 +86,10 @@ Mappings:
     us-west-2: { BucketName: 'observeinc-us-west-2' }
 Conditions:
     HasS3CustomRules: !Not [!Equals [!Ref S3CustomRules, '']]
+    HasReservedConcurrency: !Not
+      - !Equals
+        - Ref: ReservedConcurrentExecutions
+        - -1
 Resources:
   lambdaLogGroup:
     Type: 'AWS::Logs::LogGroup'
@@ -117,7 +122,10 @@ Resources:
       Runtime: go1.x
       MemorySize: !Ref MemorySize
       Timeout: !Ref Timeout
-      ReservedConcurrentExecutions: !Ref ReservedConcurrentExecutions
+      ReservedConcurrentExecutions: !If
+       - HasReservedConcurrency
+       - !Ref ReservedConcurrentExecutions
+       - !Ref 'AWS::NoValue'
   role:
     Type: AWS::IAM::Role
     Properties:
