@@ -1,6 +1,7 @@
 .PHONY: cloudformation
 cloudformation:
 	aws s3 cp templates/lambda.yaml s3://observeinc/cloudformation/lambda-`semtag final -s minor -o`.yaml
+	aws s3 cp templates/lambda.yaml s3://observeinc/cloudformation/lambda-latest.yaml
 
 .PHONY: changelog
 changelog:
