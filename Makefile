@@ -1,7 +1,10 @@
+S3_CP_ARGS=aws s3 cp --acl public-read
+
+
 .PHONY: cloudformation
 cloudformation:
-	aws s3 cp templates/lambda.yaml s3://observeinc/cloudformation/lambda-`semtag final -s minor -o`.yaml
-	aws s3 cp templates/lambda.yaml s3://observeinc/cloudformation/lambda-latest.yaml
+	$(S3_CP_ARGS) templates/lambda.yaml s3://observeinc/cloudformation/lambda-`semtag final -s minor -o`.yaml
+	$(S3_CP_ARGS) templates/lambda.yaml s3://observeinc/cloudformation/lambda-latest.yaml
 
 .PHONY: changelog
 changelog:
