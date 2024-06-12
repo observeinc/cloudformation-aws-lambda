@@ -109,7 +109,7 @@ Resources:
       - lambdaLogGroup
     Properties:
       FunctionName: !Ref 'AWS::StackName'
-      Handler: main
+      Handler: bootstrap
       Role: !GetAtt 'role.Arn'
       Environment:
         Variables:
@@ -121,14 +121,16 @@ Resources:
             - !Ref 'AWS::NoValue'
       Code:
         S3Bucket: !FindInMap [RegionMap, !Ref 'AWS::Region', BucketName]
-        S3Key: !Sub 'lambda/observer/${Version}.zip'
-      Runtime: go1.x
+        S3Key: !Sub 'lambda/observer/arm64/${Version}.zip'
+      Runtime: provided.al2
       MemorySize: !Ref MemorySize
       Timeout: !Ref Timeout
       ReservedConcurrentExecutions: !If
        - HasReservedConcurrency
        - !Ref ReservedConcurrentExecutions
        - !Ref 'AWS::NoValue'
+      Architectures:
+       - arm64
   role:
     Type: AWS::IAM::Role
     Properties:
